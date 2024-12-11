@@ -1,0 +1,49 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<h1>Bem vindo, {{ user.first_name}}! </h1>
+
+<form action="{% url 'admin:logout' %}?next=/" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sair</button>
+</form>
+
+<br><hr><br>
+
+<div class="container">
+    <h1>Lista de Produtos</h1>
+    <div class="table-responsive">
+        <table class="table table-primary">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in object_list%}
+                <tr>
+                    <th scope="row">{{ produto.id }}</th scope='row'>
+                    <td>{{ produto.nome }}
+                    <td>
+                        <a href="{% url 'produto-detail' produto.pk %}" class="btn btn-info btn-sm">Detalhes</a>
+                        <a href="{% url 'produto-update' produto.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'produto-delete' produto.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="window.location.href = '/produto/add/'">Inserir Produto Novo</button>
+    </div>
+</div>
+
+{% else %}
+    <h1>Por favor, efetue o <a href="{% url 'admin:login' %}?next=/">Login</a> para acessar.</h1>
+
+{% endif %}
+{% endblock %}
